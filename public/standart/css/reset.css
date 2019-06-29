@@ -114,18 +114,18 @@ image-list li {
     padding: 10px;
 }
 
-.close {
+#image-list .close {
     position: absolute;
     width: 32px;
     height: 32px;
     opacity: 0.3;
 }
 
-.close:hover {
+#image-list .close:hover {
     opacity: 1;
 }
 
-.close:before, .close:after {
+#image-list .close:before, #image-list .close:after {
     position: absolute;
     top: -10px;
     content: ' ';
@@ -134,11 +134,11 @@ image-list li {
     background-color: #f90505;
 }
 
-.close:before {
+#image-list .close:before {
     transform: rotate(45deg);
 }
 
-.close:after {
+#image-list .close:after {
     transform: rotate(-45deg);
 }
 

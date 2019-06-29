@@ -3,6 +3,8 @@
 namespace App\Filters;
 
 
+use Illuminate\Support\Facades\DB;
+
 class ApartmentFilter extends AbstractFilter
 {
 
@@ -28,6 +30,38 @@ class ApartmentFilter extends AbstractFilter
         $price = explode(",", $value);
         $this->builder->where('price', '>=', $price[0]);
         $this->builder->where('price', '<=', $price[1]);
+    }
+
+    public function username($value)
+    {
+        $this->builder->whereHas('user', function ($query) use ($value) {
+            $query->where('name', $value);
+        });
+    }
+
+    public function orderBy($value)
+    {
+        $sql = $this->builder;
+        $param = "";
+
+        if (strstr($value, '-')) {
+            $param = "DESC";
+        } else {
+            $param = "ASC";
+        }
+
+        $value = str_replace("-", "", $value);
+
+        if ($value == "allBooks") {
+            $this->builder->withCount('book')->orderBy('book_count', $param);
+        } elseif ($value == "actualBooks") {
+            $sql->withCount(['book' => function ($query) {
+                $query->where('book_end', '>', date('Y-m-d'));
+            }])->orderBy('book_count', $param);
+        } else {
+            $this->builder->orderBy($value, $param);
+        }
+
     }
 
 }

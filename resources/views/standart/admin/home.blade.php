@@ -14,10 +14,14 @@
                         <button>search</button>
                     </form>
                 </th>
-                <th style="text-align: center;">Price</th>
-                <th style="text-align: center;">Rooms</th>
-                <th style="text-align: center;">All books</th>
-                <th style="text-align: center;">Actual books</th>
+                <th style="text-align: center;"><a href="/admin_area/filter?orderBy=price" data-sort="price">Price</a>
+                </th>
+                <th style="text-align: center;"><a href="/admin_area/filter?orderBy=rooms" data-sort="rooms">Rooms</a>
+                </th>
+                <th style="text-align: center;"><a href="/admin_area/filter?orderBy=allBooks" data-sort="allBooks">All books</a>
+                </th>
+                <th style="text-align: center;"><a href="/admin_area/filter?orderBy=actualBooks" data-sort="actualBooks">Actual books</a>
+                </th>
                 <th style="text-align: center;">Status</th>
                 <th style="text-align: center;">Action</th>
             </tr>
@@ -49,7 +53,8 @@
                         </td>
                         <td>
                             <div class="form-group">
-                                <select class="form-control apartment-status" name="status" data-alias="{{ $apartment->alias }}">
+                                <select class="form-control apartment-status" name="status"
+                                        data-alias="{{ $apartment->alias }}">
                                     <option value="0" {{ $apartment->status == 0 ? 'selected' : '' }}>Pending</option>
                                     <option value="1" {{ $apartment->status == 1 ? 'selected' : '' }}>Approved</option>
                                     <option value="2" {{ $apartment->status == 2 ? 'selected' : '' }}>Rejected</option>
@@ -78,12 +83,12 @@
 
     </div>
     <div style="text-align: center">
-        {{--{{ $apartments->links() }}--}}
+        {{ $apartments->links() }}
     </div>
 </div>
 
 <script>
-    $('.apartment-status').change(function() {
+    $('.apartment-status').change(function () {
         var apart = $(this).attr('data-alias');
         var status = $(this).val();
         var select = $(this);
@@ -95,16 +100,43 @@
         });
 
         $.ajax({
-            type:'POST',
-            async:true,
-            beforeSend: function() {
+            type: 'POST',
+            async: true,
+            beforeSend: function () {
                 select.css('background-color', '#eee');
             },
-            complete: function() {
+            complete: function () {
                 select.css('background-color', 'white');
             },
-            url:'/admin_area/apartment/ups/' + apart,
-            data:{status: status}
+            url: '/admin_area/apartment/ups/' + apart,
+            data: {status: status}
         });
     });
+
+    var url = new URL(window.location.href);
+    var urlOrderBy = url.searchParams.get("orderBy");
+
+    $('th a').click(function () {
+
+        var orderBy = $(this).data('sort');
+
+        if (urlOrderBy) {
+            if (urlOrderBy.indexOf("-") != 0) {
+                orderBy = "-" + orderBy;
+            } else {
+                orderBy = orderBy.replace(/-/g, '');
+            }
+            document.location.href = "/admin_area/filter?orderBy=" + orderBy;
+            return false;
+        }
+    });
+
+    if (urlOrderBy) {
+        var sort = $('th a');
+        $.each(sort, function (idx, item) {
+            if (urlOrderBy.replace(/-/g, '') == $(item).data('sort')) {
+                $(item).addClass('bg-primary');
+            }
+        });
+    }
 </script>

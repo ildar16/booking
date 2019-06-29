@@ -1,7 +1,7 @@
 <div class="container">
     <div class="col-md-12" style="padding: 10px">
 
-        <a href="{{ route("apartment.create") }}" class="btn btn-primary">Create apartment</a>
+        <p><a href="{{ route("apartment.create") }}" class="btn btn-primary">Create apartment</a></p>
 
         <table class="table table-bordered" style="text-align: center;">
             <thead>

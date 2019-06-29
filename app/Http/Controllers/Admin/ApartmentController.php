@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Apartment;
+use App\Filters\AdminFilter;
+use App\Filters\ApartmentFilter;
 use App\Repositories\ApartmentRepository;
 use App\Repositories\BooksRepository;
 use Illuminate\Http\Request;
@@ -74,9 +76,20 @@ class ApartmentController extends AdminController
         $apartment->update();
     }
 
-    public function filter(Request $request)
+    public function filter(Apartment $apartment, Request $request)
     {
-        dd($request);
+        $this->title = "Admin";
+
+        $apartments = Apartment::with('book')->with('user');
+
+        $this->title = "Filter";
+
+        $apartments = (new ApartmentFilter($apartments, $request))->apply()->paginate(10)->appends(request()->query());
+
+        $content = view(config('settings.theme') . '.admin.home')->with('apartments', $apartments)->render();
+        $this->vars = array_add($this->vars, 'content', $content);
+
+        return $this->renderOutput();
     }
 
     /**

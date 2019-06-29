@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Apartment;
-use App\Filters\AdminFilter;
 use App\Repositories\ApartmentRepository;
 use Illuminate\Http\Request;
 
@@ -20,16 +19,10 @@ class IndexController extends AdminController
     {
         $this->title = "Admin";
 
-//        $apartments = $this->a_rep->get('*', false, true);
-//        $apartments->load('book');
-//        $apartments->load('user');
+        $apartments = Apartment::with('book')->with('user')->paginate(10);
 
-        $apartments = Apartment::with('book')->with('user')->get();
-
-//        $apartments = (new AdminFilter($apartments, $request))->apply()->paginate(6);
-
-        $content = view(config('settings.theme').'.admin.home')->with('apartments', $apartments)->render();
-        $this->vars = array_add($this->vars,'content',$content);
+        $content = view(config('settings.theme') . '.admin.home')->with('apartments', $apartments)->render();
+        $this->vars = array_add($this->vars, 'content', $content);
 
         return $this->renderOutput();
     }
@@ -47,7 +40,7 @@ class IndexController extends AdminController
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -58,7 +51,7 @@ class IndexController extends AdminController
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -69,7 +62,7 @@ class IndexController extends AdminController
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -80,8 +73,8 @@ class IndexController extends AdminController
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \Illuminate\Http\Request $request
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -92,7 +85,7 @@ class IndexController extends AdminController
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)

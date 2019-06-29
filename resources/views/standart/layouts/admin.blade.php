@@ -97,7 +97,8 @@
     $.notify({
         message: "{{ session('warning') }}"
     }, {
-        type: 'warning'
+        type: 'warning',
+
     });
     @endif
 </script>
